@@ -1,19 +1,17 @@
-import express from "express";
-import cors from "cors";
-import exp from "constants";
+import app from "./app";
+import dotenv from "dotenv";
+import connectDB from "./db/db";
 
-const app = express();
-
-app.use(express.json());
-
-app.use(
-  cors({
-    origin: "*",
-  })
-);
-
-app.get("/", (req, res) => {
-  res.json({ data: "hello" });
+dotenv.config({
+  path: "./.env",
 });
 
-app.listen(8000);
+connectDB()
+  .then(() => {
+    app.listen(process.env.PORT, () => {
+      console.log(`SERVER RUNNING ON ${process.env.PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log("ERROR DURING CONNECTION !!!", err);
+  });
