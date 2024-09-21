@@ -70,4 +70,24 @@ export default class NotesController {
     });
     handleApiResponse(res, response);
   };
+
+  deleteNote = async (req: Request, res: Response) => {
+    const { noteId } = req.params;
+    const { userId } = req;
+
+    const note = await Note.findById({ _id: noteId });
+
+    if (!note) {
+      throw ErrorFactory.notFoundError("Note ID invalid or Not Found");
+    }
+
+    await Note.deleteOne({ _id: noteId });
+
+    const response = ApiResponse.success({
+      data: null,
+      message: "Note delete Successfully",
+      statusCode: StatusCodes.CREATED,
+    });
+    handleApiResponse(res, response);
+  };
 }
