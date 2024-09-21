@@ -57,4 +57,17 @@ export default class NotesController {
     });
     handleApiResponse(res, response);
   };
+
+  viewAllNotes = async (req: Request, res: Response) => {
+    const { userId } = req;
+
+    const notes = await Note.find({ userId }).sort({ isPinned: -1 });
+
+    const response = ApiResponse.success({
+      data: notes,
+      message: "All notes retrieved Successfully",
+      statusCode: StatusCodes.CREATED,
+    });
+    handleApiResponse(res, response);
+  };
 }
