@@ -31,4 +31,30 @@ export default class NotesController {
     });
     handleApiResponse(res, response);
   };
+
+  editNote = async (req: Request, res: Response) => {
+    const { title, content, tags, isPinned } = req.body;
+    const { userId } = req;
+    const { noteId } = req.params;
+
+    const note = await Note.findById({ _id: noteId });
+
+    if (!note) {
+      throw ErrorFactory.notFoundError("NoteId invalid or not Found");
+    }
+
+    if (title) note.title = title;
+    if (content) note.content = content;
+    if (tags) note.tags = tags;
+    if (isPinned) note.isPinned = isPinned;
+
+    const updatedNote = await note.save();
+
+    const response = ApiResponse.success({
+      data: { updatedNote },
+      message: "Note Updated Successfully",
+      statusCode: StatusCodes.CREATED,
+    });
+    handleApiResponse(res, response);
+  };
 }
