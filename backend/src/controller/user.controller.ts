@@ -79,4 +79,23 @@ export default class UserController {
     });
     handleApiResponse(res, response);
   };
+
+  viewUser = async (req: Request, res: Response) => {
+    const { userId } = req;
+
+    console.log(userId);
+
+    try {
+      const user = await User.findById({ _id: userId });
+
+      const response = ApiResponse.success({
+        data: { user },
+        message: "",
+        statusCode: StatusCodes.OK,
+      });
+      handleApiResponse(res, response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }
