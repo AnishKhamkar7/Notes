@@ -46,4 +46,37 @@ export default class UserController {
     });
     handleApiResponse(res, response);
   };
+
+  loginUser = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      throw ErrorFactory.badRequestError("All fields are required");
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      throw ErrorFactory.conflictError("User does not exists");
+    }
+
+    if (user.password !== password) {
+      throw ErrorFactory.forbiddenError("Invalid User Credentials");
+    }
+
+    const accessToken = jwt.sign(
+      { _id: user._id },
+      envConfig.JWT_ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: envConfig.JWT_ACCESS_TOKEN_EXPIRY,
+      }
+    );
+
+    const response = ApiResponse.success({
+      data: { user, accessToken },
+      message: "User Registered Successfully",
+      statusCode: StatusCodes.CREATED,
+    });
+    handleApiResponse(res, response);
+  };
 }
