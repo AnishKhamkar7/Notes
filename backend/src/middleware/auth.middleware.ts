@@ -11,7 +11,7 @@ declare module "express" {
 
 declare module "jsonwebtoken" {
   interface JwtPayload {
-    id?: string;
+    _id?: string;
   }
 }
 
@@ -26,9 +26,15 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     if (err) {
       throw ErrorFactory.unauthorizedError("Token is Unauthorized");
     }
-    const { id } = user as jwt.JwtPayload;
 
-    req.userId = id;
+    const { _id } = user as jwt.JwtPayload;
+
+    if (!_id) {
+      return next(ErrorFactory.unauthorizedError("Invalid token payload"));
+    }
+    req.userId = _id;
     next();
   });
 };
+
+export default authMiddleware;
