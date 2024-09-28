@@ -1,10 +1,10 @@
-import BadRequestError from './BadRequestError';
-import ConflictError from './ConflictError';
-import InternalServerError from './InternalServerError';
-import NotFoundError from './NotFoundError';
-import ForbiddenError from './ForbiddenError';
-import UnauthorizedError from './UnauthorizedError';
-import TooManyRequest from './ToManyRequests';
+import BadRequestError from "./BadRequestError";
+import ConflictError from "./ConflictError";
+import InternalServerError from "./InternalServerError";
+import NotFoundError from "./NotFoundError";
+import ForbiddenError from "./ForbiddenError";
+import UnauthorizedError from "./UnauthorizedError";
+import TooManyRequest from "./ToManyRequests";
 
 export default class ErrorFactory {
   static badRequestError(message: string) {
