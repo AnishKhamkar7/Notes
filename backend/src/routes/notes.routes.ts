@@ -26,4 +26,8 @@ router
   .route("/:noteId")
   .patch(authMiddleware, asyncHandler(notesController.updatePinnedNotes));
 
+router
+  .route("/search-notes/")
+  .get(authMiddleware, asyncHandler(notesController.searchNotes));
+
 export default router;
