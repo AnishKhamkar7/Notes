@@ -4,7 +4,7 @@ import ApiResponse from "../http/ApiResponse";
 import { StatusCodes } from "http-status-codes";
 import handleApiResponse from "../http/handleApiResponse";
 import { Note } from "../models/notes.model";
-import { ResolveFnOutput } from "module";
+import { QuerySchema, querySchema } from "../validation/query.validation";
 
 export default class NotesController {
   addNote = async (req: Request, res: Response) => {
@@ -34,7 +34,6 @@ export default class NotesController {
 
   editNote = async (req: Request, res: Response) => {
     const { title, content, tags, isPinned } = req.body;
-    const { userId } = req;
     const { noteId } = req.params;
 
     const note = await Note.findById({ _id: noteId });
@@ -110,6 +109,36 @@ export default class NotesController {
       data: { updatedNote },
       message: "Note Updated Successfully",
       statusCode: StatusCodes.CREATED,
+    });
+    handleApiResponse(res, response);
+  };
+
+  searchNotes = async (req: Request, res: Response) => {
+    const { userId } = req;
+    const { query } = req.query;
+
+    const parsedQuery = querySchema.parse(query);
+
+    const regexQuery = Array.isArray(parsedQuery)
+      ? parsedQuery.join(" ")
+      : parsedQuery;
+
+    const matchingNotes = await Note.find({
+      userId: userId,
+      $or: [
+        {
+          title: { $regex: new RegExp(regexQuery, "i") },
+        },
+        {
+          content: { $regex: new RegExp(regexQuery, "i") },
+        },
+      ],
+    });
+
+    const response = ApiResponse.success({
+      data: { matchingNotes },
+      message: "Note Retrieved Successfully",
+      statusCode: StatusCodes.OK,
     });
     handleApiResponse(res, response);
   };
