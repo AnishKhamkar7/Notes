@@ -6,6 +6,8 @@ import envConfig from "../config/env.config";
 import ApiResponse from "../http/ApiResponse";
 import { StatusCodes } from "http-status-codes";
 import handleApiResponse from "../http/handleApiResponse";
+import { hashPassword, comparePassword } from "../utils/password";
+import { StringExpressionOperatorReturningArray } from "mongoose";
 
 export default class UserController {
   registerUser = async (req: Request, res: Response) => {
@@ -21,10 +23,12 @@ export default class UserController {
       throw ErrorFactory.conflictError("User already exists");
     }
 
+    const hashedPassword = await hashPassword(password);
+
     const user = await User.create({
       name,
       email,
-      password,
+      password: hashedPassword,
     });
 
     if (!user) {
@@ -59,10 +63,10 @@ export default class UserController {
     if (!user) {
       throw ErrorFactory.conflictError("User does not exists");
     }
-
-    if (user.password !== password) {
-      throw ErrorFactory.forbiddenError("Invalid User Credentials");
-    }
+    await comparePassword({
+      password: password,
+      hashedPassword: user.password!,
+    });
 
     const accessToken = jwt.sign(
       { _id: user._id },
@@ -74,7 +78,7 @@ export default class UserController {
 
     const response = ApiResponse.success({
       data: { user, accessToken },
-      message: "User Registered Successfully",
+      message: "User LoggedIn Successfully",
       statusCode: StatusCodes.CREATED,
     });
     handleApiResponse(res, response);
