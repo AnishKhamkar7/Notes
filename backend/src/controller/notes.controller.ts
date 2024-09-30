@@ -92,7 +92,6 @@ export default class NotesController {
 
   updatePinnedNotes = async (req: Request, res: Response) => {
     const { noteId } = req.params;
-    const { userId } = req;
     const { isPinned } = req.body;
 
     const note = await Note.findById({ _id: noteId });
@@ -101,7 +100,7 @@ export default class NotesController {
       throw ErrorFactory.notFoundError("NoteId invalid or not Found");
     }
 
-    if (isPinned) note.isPinned = isPinned || false;
+    note.isPinned = isPinned;
 
     const updatedNote = await note.save();
 

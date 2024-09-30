@@ -23,7 +23,7 @@ router
   .delete(authMiddleware, asyncHandler(notesController.deleteNote));
 
 router
-  .route("/:noteId")
+  .route("/update-pin/:noteId")
   .patch(authMiddleware, asyncHandler(notesController.updatePinnedNotes));
 
 router
