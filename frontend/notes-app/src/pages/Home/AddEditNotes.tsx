@@ -1,40 +1,76 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TagInput from "../../components/Input/TagInput";
 import { MdClose } from "react-icons/md";
+import axiosInstance from "../../utils/axiosInstance";
 import { notesSchema, NotesSchema } from "../../validation/notes/notes";
 
 function AddEditNotes({
   notesData,
   type,
   onClose,
+  getAllNotes,
 }: {
-  notesData: string;
+  notesData: {
+    _id?: string;
+    title?: string;
+    content?: string;
+    tags?: string[];
+  };
   type: string;
-  onClose: void;
+  onClose: () => void;
+  getAllNotes: any;
 }) {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
+  const [title, setTitle] = useState(notesData?.title || "");
+  const [content, setContent] = useState(notesData?.content || "");
+  const [tags, setTags] = useState<string[]>(notesData?.tags || []);
   const [error, setError] = useState<any | null>(null);
 
-  const editNote = async () => {};
+  const addNote = async () => {
+    try {
+      const response = await axiosInstance.post("/api/notes/add", {
+        title,
+        content,
+        tags,
+      });
 
-  const addNote = async () => {};
-
-  const handleAddNote = () => {
-    useEffect(() => {
-      const data: NotesSchema = { title, content };
-      const validateData = notesSchema.safeParse(data);
-
-      if (!validateData.success) {
-        const errorMessages = validateData.error.errors
-          .map((error) => error.message)
-          .join(" :: ");
-        setError(errorMessages);
-      } else {
-        setError(null);
+      if (response.data) {
+        getAllNotes();
+        onClose();
       }
-    }, [title, content]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editNote = async () => {
+    try {
+      const noteId = notesData._id;
+
+      const response = await axiosInstance.patch("/api/notes/edit/" + noteId, {
+        title,
+        content,
+        tags,
+      });
+
+      if (response.data) {
+        getAllNotes();
+        onClose();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleAddEditNote = () => {
+    const data: NotesSchema = { title, content };
+    const validateData = notesSchema.safeParse(data);
+
+    if (!validateData.success) {
+      const errorMessages = validateData.error.errors
+        .map((error) => error.message)
+        .join(" :: ");
+      setError(errorMessages);
+    }
 
     if (type === "edit") {
       editNote();
@@ -87,8 +123,11 @@ function AddEditNotes({
 
       {error && <p className="text-red-500 text-xs pt-4">{error}</p>}
 
-      <button className="btn-primary font-medium mt-5 p-3" onClick={() => {}}>
-        ADD
+      <button
+        className="btn-primary font-medium mt-5 p-3"
+        onClick={handleAddEditNote}
+      >
+        {type === "edit" ? "UPDATE" : "ADD"}
       </button>
     </div>
   );
