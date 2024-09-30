@@ -1,9 +1,10 @@
 import PasswordInput from "../../components/Input/PasswordInput";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import { RegisterSchema, registerSchema } from "../../validation/auth/auth";
+import axiosInstance from "../../utils/axiosInstance";
 
 type SubmitChangeEvent = React.FormEvent<HTMLFormElement>;
 
@@ -12,6 +13,8 @@ function Signup() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<any | null>(null);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: SubmitChangeEvent) => {
     e.preventDefault();
@@ -29,6 +32,21 @@ function Signup() {
     }
 
     setError(null);
+
+    try {
+      const response = await axiosInstance.post("/api/users/register", {
+        name,
+        email,
+        password,
+      });
+
+      if (response.data && response.data.data.accessToken) {
+        localStorage.setItem("token", response.data.data.accessToken);
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

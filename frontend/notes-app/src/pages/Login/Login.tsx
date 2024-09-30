@@ -1,14 +1,8 @@
 import React, { useState } from "react";
-import Navbar from "../../components/Navbar/Navbar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PasswordInput from "../../components/Input/PasswordInput";
 import { LoginSchema, loginSchema } from "../../validation/auth/auth";
-
-type FormFields = {
-  username: string;
-  password: string;
-  email: string;
-};
+import axiosInstance from "../../utils/axiosInstance";
 
 type InputChangeEvent = React.ChangeEvent<HTMLInputElement>;
 type SubmitChangeEvent = React.FormEvent<HTMLFormElement>;
@@ -17,6 +11,8 @@ function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<any | null>(null);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: SubmitChangeEvent) => {
     e.preventDefault();
@@ -34,7 +30,21 @@ function Login() {
     }
 
     setError(null);
-    //login API CALL
+
+    try {
+      const response = await axiosInstance.post("/api/users/login", {
+        email,
+        password,
+      });
+
+      if (response.data && response.data.data.accessToken) {
+        localStorage.setItem("token", response.data.data.accessToken);
+
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleEmailChange = (e: InputChangeEvent) => {
