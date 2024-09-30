@@ -66,7 +66,7 @@ function TagInput({ tags, setTags }) {
             addNewTag();
           }}
         >
-          <div className="text-2xl" text-blue-700 hover:text-white>
+          <div className="text-2xl text-blue-700 hover:text-white">
             <MdAdd />
           </div>
         </button>
