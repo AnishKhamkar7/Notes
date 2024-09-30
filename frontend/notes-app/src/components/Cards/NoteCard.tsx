@@ -1,4 +1,3 @@
-import React from "react";
 import { MdCreate, MdDelete, MdOutlinePushPin } from "react-icons/md";
 
 function NoteCard({
