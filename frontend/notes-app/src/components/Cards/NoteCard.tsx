@@ -1,5 +1,16 @@
 import { MdCreate, MdDelete, MdOutlinePushPin } from "react-icons/md";
 
+interface NoteCardProps {
+  title: string;
+  date: string;
+  content: string;
+  tags: string[];
+  isPinned: boolean;
+  onEdit: () => void;
+  onDelete: () => void;
+  onPinNote: () => void;
+}
+
 function NoteCard({
   title,
   date,
@@ -9,7 +20,7 @@ function NoteCard({
   onEdit,
   onDelete,
   onPinNote,
-}) {
+}: NoteCardProps) {
   return (
     <div className="border rounded p-4 bg-white hover:shadow-xl transition-all ease-in-out">
       <div className="flex items-center justify-between">
