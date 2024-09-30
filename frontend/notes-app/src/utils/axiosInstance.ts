@@ -34,7 +34,7 @@ axiosInstance.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    const { config: originalRequest, response: originalResponse } = error;
+    const { config: originalRequest } = error;
     if (!originalRequest) {
       console.log("error: there is no original request", error);
       return Promise.reject(error);

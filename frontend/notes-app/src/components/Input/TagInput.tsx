@@ -4,7 +4,12 @@ import { MdAdd, MdClose } from "react-icons/md";
 type InputChangeEvent = React.ChangeEvent<HTMLInputElement>;
 type InputKey = React.KeyboardEvent<HTMLInputElement>;
 
-function TagInput({ tags, setTags }) {
+interface TagInput {
+  tags: string[];
+  setTags: (tags: string[]) => void;
+}
+
+function TagInput({ tags, setTags }: TagInput) {
   const [inputValue, setInputValue] = useState("");
 
   const handleInputChange = (e: InputChangeEvent) => {
