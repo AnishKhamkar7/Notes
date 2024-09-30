@@ -7,14 +7,37 @@ import {
 import Signup from "./pages/Signup/Signup";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
-import Layout from "./components/Layout/Layout";
+import PrivateRoute from "./components/Routes/PrivateRoutes";
+import PublicRoute from "./components/Routes/PublicRoutes";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Layout />}>
-      <Route path="dashboard" element={<Home />} />
-      <Route path="signup" element={<Signup />} />
-      <Route path="login/" element={<Login />} />
+    <Route>
+      <Route
+        path="/"
+        element={
+          <PrivateRoute>
+            <Home />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="signup"
+        element={
+          <PublicRoute>
+            <Signup />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="login/"
+        element={
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        }
+      />
     </Route>
   )
 );
