@@ -14,8 +14,8 @@ import Icon2 from "../../assets/error-404.svg";
 interface Note {
   _id: string;
   title: string;
+  createdAt: Date;
   content: string;
-  createdAt: string;
   tags: string[];
   isPinned: boolean;
 }
@@ -26,12 +26,12 @@ function Home() {
     type: "add",
     data: {},
   });
-  const [userInfo, setUserInfo] = useState(null);
-  const [allNotes, setAllNotes] = useState<Note>([]);
+  const [userInfo, setUserInfo] = useState({});
+  const [allNotes, setAllNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSearch, setIsSearch] = useState(false);
 
-  const handleEdit = (data1: Note) => {
+  const handleEdit = (data1: {}) => {
     setOpenAddEditModal({
       isShown: true,
       type: "edit",
@@ -65,13 +65,13 @@ function Home() {
     }
   };
 
-  const updatePinnedNotes = async (notesData) => {
+  const updatePinnedNotes = async (notesData: Note) => {
     const notesId = notesData._id;
 
     const response = await axiosInstance.patch(
       "api/notes/update-pin/" + notesId,
       {
-        isPinned: !not.isPinned,
+        isPinned: !notesData.isPinned,
       }
     );
 
@@ -127,7 +127,7 @@ function Home() {
           </div>
         ) : allNotes.length > 0 ? (
           <div className="grid grid-cols-3 gap-4 mt-8">
-            {allNotes.map((item: Note) => (
+            {allNotes.map((item) => (
               <NoteCard
                 key={item._id}
                 title={item.title}

@@ -3,7 +3,19 @@ import ProfileInfo from "../Cards/ProfileInfo";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
 
-function Navbar({ userInfo, onSearchNote, getNotes, setIsSearch }) {
+interface NavbarProps {
+  userInfo: {};
+  onSearchNote: (query: string) => void;
+  getNotes: () => void;
+  setIsSearch: (isSearch: boolean) => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({
+  userInfo,
+  onSearchNote,
+  getNotes,
+  setIsSearch,
+}) => {
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,5 +52,5 @@ function Navbar({ userInfo, onSearchNote, getNotes, setIsSearch }) {
       </div>
     </>
   );
-}
+};
 export default Navbar;
