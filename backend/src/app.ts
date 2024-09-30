@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import errorHandlerMiddleware from "./middleware/error.middleware";
-import envConfig from "./config/env.config";
 import userRouter from "./routes/user.routes";
 import notesRouter from "./routes/notes.routes";
 
