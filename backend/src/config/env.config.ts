@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { config } from "dotenv";
 import { expand } from "dotenv-expand";
-import { error } from "console";
 
 expand(config());
 
@@ -17,7 +16,7 @@ const parsedEnv = schema.safeParse(process.env);
 if (!parsedEnv.success) {
   console.error(
     "❌ Invalid environment variables:",
-    JSON.stringify(parsedEnv.error.format(), error)
+    JSON.stringify(parsedEnv.error.format(), null, 2)
   );
   process.exit(1);
 }
