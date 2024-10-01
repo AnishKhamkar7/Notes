@@ -3,6 +3,9 @@ import cors from "cors";
 import errorHandlerMiddleware from "./middleware/error.middleware";
 import userRouter from "./routes/user.routes";
 import notesRouter from "./routes/notes.routes";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 
