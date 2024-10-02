@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { config } from "dotenv";
 import { expand } from "dotenv-expand";
+import ErrorFactory from "../errors/index";
 
 expand(config());
 
@@ -13,12 +14,15 @@ const schema = z.object({
 
 const parsedEnv = schema.safeParse(process.env);
 
+if (!parsedEnv) {
+  throw ErrorFactory.badRequestError("Parsed Env is empty ");
+}
+
 if (!parsedEnv.success) {
   console.error(
     "❌ Invalid environment variables:",
     JSON.stringify(parsedEnv.error.format(), null, 2)
   );
-  process.exit(1);
 }
 
 export default parsedEnv.data;
